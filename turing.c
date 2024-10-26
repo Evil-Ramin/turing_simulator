@@ -43,7 +43,11 @@ int main() {
          "cells, the program terminates with an error\n");
   printf("For tapes with length 50 or shorter, you can watch in real time\n");
   printf("All cells are initialized to be 0\n");
-  printf("1 ≤ (m and p) ≤ 2^31-1\n");
+  if (ff) {
+    printf("1 ≤ (m and p) ≤ 2^31-1\n");
+  } else {
+    printf("1 =< (m and p) =< 2^31-1\n");
+  }
   printf("m = ");
   scanf("%d", &m);
   if (m < 1) {
@@ -64,7 +68,11 @@ int main() {
   }
 
   int n;
-  printf("\nEnter the number of states (1 ≤ n ≤ 2^31-1): ");
+  if (ff) {
+    printf("\nEnter the number of states (1 ≤ n ≤ 2^31-1): ");
+  } else {
+    printf("\nEnter the number of states (1 =< n =< 2^31-1): ");
+  }
   scanf("%d", &n);
   if (n < 0) {
     return 1;
@@ -115,6 +123,7 @@ int main() {
   int coun;
   int mws;
   int wsc;
+  bool alrph = false;
   if (n == 0) {
     csta--;
   }
@@ -132,7 +141,8 @@ int main() {
              "will be colored green and the cell the head is on will be colord "
              "red)\nprint_cell -> prints a specified cell\nflip_cell -> flips "
              "a specified cell\nstep_one (or) s -> the head performs one "
-             "single step\nstep_many -> the head performs a specified number "
+             "single step\nsp -> performs s and then p\nstep_many -> the head "
+             "performs a specified number "
              "of steps\nhead_pos -> prints the index of the cell the head is "
              "on\nhead_mov -> moves the head to the a specified cell\nwatch_rt "
              "-> watch the machine run in real time\nno_steps -> prints the "
@@ -244,6 +254,7 @@ int main() {
     if (strcmp(cmd, "step_one") == 0 || strcmp(cmd, "s") == 0) {
       if (csta == -1) {
         printf("Halt!\n");
+        alrph = true;
       } else {
         if (cell[p]) {
           cell[p] = state[csta].write1;
@@ -292,13 +303,15 @@ int main() {
         }
         cste++;
       }
-      if (csta == -1) {
+      if ((csta == -1) && !(alrph)) {
         printf("Halt!\n");
+        alrph = false;
       }
     }
     if (strcmp(cmd, "sp") == 0) {
       if (csta == -1) {
         printf("Halt!\n");
+        alrph = true;
       } else {
         if (cell[p]) {
           cell[p] = state[csta].write1;
@@ -347,8 +360,9 @@ int main() {
         }
         cste++;
       }
-      if (csta == -1) {
+      if ((csta == -1) && !(alrph)) {
         printf("Halt!\n");
+        alrph = false;
       }
       for (int i = 0; i < m; i++) {
         if ((i == p) && ff) {
